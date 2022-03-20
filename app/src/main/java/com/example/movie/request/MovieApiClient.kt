@@ -7,6 +7,7 @@ import com.example.movie.models.MovieModel
 import com.example.movie.response.MovieSearchResponse
 import com.example.movie.utils.Credentials
 import retrofit2.Call
+import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -60,30 +61,45 @@ class MovieApiClient private constructor() {
         var cancelRequest = false
         override fun run() {
             try {
-                val response = getMovies(query, pageNumber)?.execute()
-                if (cancelRequest) {
-                    return
+                if (query.length != 0) {
+                    val response = getMovies(query, pageNumber)?.execute()
+                    responseData(response)
                 }
-                if (response!!.code() == 200) {
-                    val list = response.body()!!.movies as java.util.ArrayList<MovieModel>?
-                    if (pageNumber == 1) {
-                        viewModelMovies?.postValue(list as List<MovieModel>?)
-                    } else {
-                        val currentMovies =
-                            viewModelMovies.value as java.util.ArrayList<MovieModel>?
-                        currentMovies?.addAll(list!!)
-                        viewModelMovies.postValue(currentMovies!!)
-
-                    }
-
-                } else {
-                    val error = response.errorBody().toString()
-                    Log.v("Tag", "Error" + error)
-                    viewModelMovies.postValue(null)
+//                else {
+//                    val response = getPopularMovies(pageNumber)?.execute()
+//                    responseData(response)
+//                }
+                else{
+                    val response = getLatestMovies(pageNumber)?.execute()
+                    Log.v("Tag","Latest"+response?.body())
+                    responseData(response)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+        fun responseData(response: Response<MovieSearchResponse?>?){
+            if (cancelRequest) {
+                return
+            }
+            if (response!!.code() == 200) {
+                val list = response.body()!!.movies as java.util.ArrayList<MovieModel>?
+                if (pageNumber == 1) {
+                    viewModelMovies?.postValue(list as List<MovieModel>?)
+                } else {
+                    val currentMovies =
+                        viewModelMovies.value as java.util.ArrayList<MovieModel>?
+                    currentMovies?.addAll(list!!)
+                    viewModelMovies.postValue(currentMovies!!)
+
+                }
+
+            } else {
+                val error = response.errorBody().toString()
+                Log.v("Tag", "Error" + error)
+                viewModelMovies.postValue(null)
+            }
+
         }
 
         //Search Method
@@ -92,6 +108,20 @@ class MovieApiClient private constructor() {
             val credentials = Credentials()
             return service.getMovieApi().searchMovie(
                 credentials.API_KEY, query, pageNumber
+            )
+        }
+        private fun getPopularMovies( pageNumber: Int): Call<MovieSearchResponse?>? {
+            val service = Service()
+            val credentials = Credentials()
+            return service.getMovieApi().searchForPopularMovies(
+                credentials.API_KEY
+            )
+        }
+        private fun getLatestMovies( pageNumber: Int): Call<MovieSearchResponse?>? {
+            val service = Service()
+            val credentials = Credentials()
+            return service.getMovieApi().searchForLatestMovies(
+                credentials.API_KEY
             )
         }
 

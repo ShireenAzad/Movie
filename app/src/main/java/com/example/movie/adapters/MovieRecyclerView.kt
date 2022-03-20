@@ -24,10 +24,6 @@ class MovieRecyclerView(private val onMovieListener: OnMovieListener) :
         holder.ratingBar.text = (viewModelMovies!![position].voteAverage / 2).toString()
         with(holder.itemView.context).load(Credentials().IMAGE_URI + viewModelMovies!![position].posterPath)
             .into(holder.imageView)
-//        with(holder.itemView.context)
-//            .load(viewModelMovies!![position].poster_path)
-//            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
-//            .into(holder.imageView);
     }
 
     override fun getItemCount(): Int {

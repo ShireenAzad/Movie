@@ -33,7 +33,7 @@ class MovieRepository() {
     }
 
     fun searchNextPage() {
-        searchMovieApi(mQuery!!, mPageNumber + 1)
+        mQuery?.let { searchMovieApi(it, mPageNumber + 1) }
     }
 
 }

@@ -22,6 +22,16 @@ interface MovieApi {
         @Query("api_key") key: String?
     ): Call<MovieModel?>?
 
+    @GET("/3/movie/popular")
+    open fun searchForPopularMovies(
+        @Query("api_key") key: String?,
+    ): Call<MovieSearchResponse?>?
+
+    @GET("/3/movie/now_playing")
+    open fun searchForLatestMovies(
+        @Query("api_key") key: String?,
+    ): Call<MovieSearchResponse?>?
+
 
 }
 
