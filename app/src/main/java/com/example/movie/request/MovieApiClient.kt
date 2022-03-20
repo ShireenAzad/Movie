@@ -70,16 +70,16 @@ class MovieApiClient private constructor() {
                         viewModelMovies?.postValue(list as List<MovieModel>?)
                     } else {
                         val currentMovies =
-                            viewModelMovies!!.value as java.util.ArrayList<MovieModel>?
+                            viewModelMovies.value as java.util.ArrayList<MovieModel>?
                         currentMovies?.addAll(list!!)
-                        viewModelMovies!!.postValue(currentMovies!!)
+                        viewModelMovies.postValue(currentMovies!!)
 
                     }
 
                 } else {
                     val error = response.errorBody().toString()
                     Log.v("Tag", "Error" + error)
-                    viewModelMovies?.postValue(null)
+                    viewModelMovies.postValue(null)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

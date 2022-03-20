@@ -20,9 +20,9 @@ class MovieRecyclerView(private val onMovieListener: OnMovieListener) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as MovieViewHolder).title.text = viewModelMovies!![position].title
-        holder.releaseDate.text = viewModelMovies!![position].release_date
-        holder.ratingBar.text = (viewModelMovies!![position].vote_average / 2).toString()
-        with(holder.itemView.context).load(Credentials().IMAGE_URI + viewModelMovies!![position].poster_path)
+        holder.releaseDate.text = viewModelMovies!![position].releaseDate
+        holder.ratingBar.text = (viewModelMovies!![position].voteAverage / 2).toString()
+        with(holder.itemView.context).load(Credentials().IMAGE_URI + viewModelMovies!![position].posterPath)
             .into(holder.imageView)
 //        with(holder.itemView.context)
 //            .load(viewModelMovies!![position].poster_path)
@@ -41,4 +41,14 @@ class MovieRecyclerView(private val onMovieListener: OnMovieListener) :
         this.viewModelMovies = viewModelMovies
         notifyDataSetChanged()
     }
+    fun getIdOfMovieSelected(position: Int): MovieModel? {
+        if (viewModelMovies != null) {
+            if (viewModelMovies!!.isNotEmpty()) {
+                return viewModelMovies!![position]
+            }
+        }
+        return null
+    }
+
+
 }

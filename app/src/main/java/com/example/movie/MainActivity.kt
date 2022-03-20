@@ -1,9 +1,9 @@
 package com.example.movie
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +24,7 @@ import java.io.IOException
 
 
 class MainActivity : AppCompatActivity(), OnMovieListener {
+    val MOVIE = "movie"
     private var movieRecyclerAdapter: MovieRecyclerView? = null
     private var recyclerView: RecyclerView? = null
     private var movieListViewModel: MovieListViewModel? = null
@@ -41,9 +42,7 @@ class MainActivity : AppCompatActivity(), OnMovieListener {
         ObserveAnyChange()
 
 
-
     }
-
     private fun ObserveAnyChange() {
         movieListViewModel!!.getMovies().observe(
             this
@@ -96,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnMovieListener {
                     Log.v("Tag", "the message" + response.body().toString())
                     val movies: ArrayList<MovieModel?> = ArrayList(response.body()?.movies)
                     for (movie in movies) {
-                        Log.v("Tag", "The list" + movie?.release_date)
+                        Log.v("Tag", "The list" + movie?.releaseDate)
                         print(1)
                     }
 
@@ -165,7 +164,9 @@ class MainActivity : AppCompatActivity(), OnMovieListener {
     }
 
     override fun onMovieClick(position: Int) {
-        Toast.makeText(this, "The positon" + position, Toast.LENGTH_LONG).show()
+        val intent = Intent(this, MovieDetailsActivity::class.java)
+        intent.putExtra("movie", movieRecyclerAdapter?.getIdOfMovieSelected(position))
+        startActivity(intent)
     }
 
     override fun onCategoryClick(category: String?) {
